@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task, before_kickoff, after_kickoff
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
@@ -22,7 +22,7 @@ class AgenticStock():
     @before_kickoff
     def prepare_inputs(self, inputs):
         #Add current date
-        inputs['current_year'] = str(datetime.now().year)
+        inputs['current_date'] = str(date.today())
         return inputs
 
     # If you would like to add tools to your agents, you can learn more about it here:

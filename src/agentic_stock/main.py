@@ -2,8 +2,6 @@
 import sys
 import warnings
 
-from datetime import datetime
-
 from agentic_stock.crew import AgenticStock
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
