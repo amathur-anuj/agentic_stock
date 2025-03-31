@@ -10,7 +10,6 @@ load_dotenv()
 
 # Get the Groq API key from environment variables
 groq_api_key = os.environ.get("GROQ_API_KEY")
-print(f"GROQ_API_KEY: {groq_api_key}")
 
 # Check if the API key exists
 if not groq_api_key:
@@ -56,10 +55,45 @@ class AgenticStock():
             verbose=True
         )
 
+    #@agent
+    #def reporting_analyst(self) -> Agent:
+    #    return Agent(
+    #        config=self.agents_config['reporting_analyst'],
+    #        verbose=True
+    #    )
+      
     @agent
-    def reporting_analyst(self) -> Agent:
+    def Sentiment_Analyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['reporting_analyst'],
+            config=self.agents_config['Sentiment_Analyst'],
+            verbose=True
+        )
+    
+    @agent
+    def Fundamental_Analyst(self) -> Agent:
+        return Agent(
+            config=self.agents_config['Fundamental_Analyst'],
+            verbose=True
+        )
+    
+    @agent
+    def Technical_Analyst(self) -> Agent:
+        return Agent(
+            config=self.agents_config['Technical_Analyst'],
+            verbose=True
+        )
+    
+    @agent
+    def Risk_Manager(self) -> Agent:
+        return Agent(
+            config=self.agents_config['Risk_Manager'],
+            verbose=True
+        )
+    
+    @agent
+    def Recommendation_Engine(self) -> Agent:
+        return Agent(
+            config=self.agents_config['Recommendation_Engine'],
             verbose=True
         )
 
@@ -72,12 +106,44 @@ class AgenticStock():
             config=self.tasks_config['research_task'],
         )
 
+    # @task
+    # def reporting_task(self) -> Task:
+    #    return Task(
+    #        config=self.tasks_config['reporting_task'],
+    #        output_file='report.md'
+    #    )
+
     @task
-    def reporting_task(self) -> Task:
+    def sentiment_task(self) -> Task:
         return Task(
-            config=self.tasks_config['reporting_task'],
-            output_file='report.md'
+            config=self.tasks_config['sentiment_analysis_task'],
         )
+    
+    @task
+    def fundamental_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['fundamental_analysis_task'],
+        )
+    
+    @task
+    def technical_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['technical_analysis_task'],
+        )
+    
+    @task
+    def risk_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['risk_assessment_task'],
+        )
+    
+    @task
+    def final_recommendation_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['final_recommendation_task'],
+            output_file='final_recommendation.md'
+        )
+
 
     @crew
     def crew(self) -> Crew:

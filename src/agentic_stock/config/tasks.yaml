@@ -7,11 +7,57 @@ research_task:
     A list with 10 bullet points of the most relevant insights about {Stock}
   agent: researcher
 
-reporting_task:
+#reporting_task:
+#  description: >
+#    Review the context you got and expand each insight into a full section for a report.
+#    Make sure the report is detailed and contains any and all relevant information.
+#  expected_output: >
+#    A fully fledged report with the main insight, each with a full section of information.
+#    Formatted as markdown without '```'
+#  agent: reporting_analyst
+
+sentiment_analysis_task:
   description: >
-    Review the context you got and expand each insight into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Analyze the sentiment surrounding {Stock} using the latest news, social media, 
+    and financial forums. Determine whether the market sentiment is bullish, bearish, or neutral.
   expected_output: >
-    A fully fledged report with the main insight, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A sentiment score (-1 to +1) along with a summary explaining the general mood 
+    and key reasons behind the sentiment.
+  agent: Sentiment_Analyst
+
+fundamental_analysis_task:
+  description: >
+    Evaluate {Stock}'s financial health by analyzing earnings reports, balance sheets, 
+    income statements, cash flow, and key valuation ratios.
+  expected_output: >
+    A financial summary with key ratios (P/E, P/B, ROE, etc.), intrinsic valuation insights, 
+    and an assessment of whether {Stock} is overvalued, undervalued, or fairly priced.
+  agent: Fundamental_Analyst
+
+technical_analysis_task:
+  description: >
+    Analyze {Stock}'s historical price movements, trading volume, and chart patterns.
+    Identify key technical indicators such as support/resistance levels, moving averages, 
+    RSI, and MACD signals.
+  expected_output: >
+    A technical analysis report with key trend patterns, possible entry/exit points, 
+    and indicators suggesting future price movements.
+  agent: Technical_Analyst
+
+risk_assessment_task:
+  description: >
+    Identify the key risks associated with investing in {Stock}, including 
+    market risks, industry-specific risks, macroeconomic risks, and company-related risks.
+  expected_output: >
+    A risk report outlining potential downside factors, historical volatility analysis, 
+    and risk mitigation strategies.
+  agent: Risk_Manager
+
+final_recommendation_task:
+  description: >
+    Consolidate insights from all analyses (research, sentiment, fundamentals, 
+    technicals, and risk) to generate a final buy, hold, or sell recommendation for {Stock}.
+  expected_output: >
+    A final recommendation (Buy/Hold/Sell) with a summary of supporting reasons 
+    and confidence level in the decision.
+  agent: Recommendation_Engine
