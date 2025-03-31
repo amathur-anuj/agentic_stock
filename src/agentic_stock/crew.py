@@ -1,5 +1,6 @@
+from datetime import datetime
 from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
+from crewai.project import CrewBase, agent, crew, task, before_kickoff, after_kickoff
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,6 +18,12 @@ class AgenticStock():
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
+
+    @before_kickoff
+    def prepare_inputs(self, inputs):
+        #Add current date
+        inputs['current_year'] = str(datetime.now().year)
+        return inputs
 
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
