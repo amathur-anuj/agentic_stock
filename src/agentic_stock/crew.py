@@ -1,9 +1,30 @@
 from datetime import date
+import os
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task, before_kickoff, after_kickoff
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
 from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+
 load_dotenv()
+
+# Get the Groq API key from environment variables
+groq_api_key = os.environ.get("GROQ_API_KEY")
+print(f"GROQ_API_KEY: {groq_api_key}")
+
+# Check if the API key exists
+if not groq_api_key:
+    raise ValueError("GROQ_API_KEY environment variable not found or empty. Please ensure it is set correctly in your .env file.")
+
+
+# Instantiate the Groq LLM
+# Assumes GROQ_API_KEY is set in the environment (.env file)
+# You might need to specify a model_name if you don't want the default
+llm = ChatGroq(
+    api_key=groq_api_key,
+    model='deepseek-r1-distill-llama-70b'
+)
+
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -70,4 +91,5 @@ class AgenticStock():
             process=Process.sequential,
             verbose=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+            llm=llm # Set the default Groq LLM for the crew
         )

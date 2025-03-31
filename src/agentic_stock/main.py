@@ -16,7 +16,7 @@ def run():
     Run the crew.
     """
     inputs = {
-        "topic": input("Enter the topic: ")
+        "Stock": input("Enter the Stock: ")
     }
     
     try:
@@ -54,7 +54,6 @@ def test():
     """
     inputs = {
         "topic": "AI LLMs",
-        "current_year": str(datetime.now().year)
     }
     try:
         AgenticStock().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
