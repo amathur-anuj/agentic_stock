@@ -37,18 +37,24 @@ $ crewai run
 
 This command initializes the agentic-stock Crew, assembling the agents and assigning them tasks as defined in your configuration.
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+## The Crew and Their Tasks
 
-## Understanding Your Crew
+The AgenticStock Crew consists of several specialized agents, each designed to perform specific tasks related to stock analysis. Here's a breakdown of the agents and their responsibilities:
 
-The agentic-stock Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+**Agents:**
 
-## Support
+*   **Researcher:** Conducts thorough stock research to uncover relevant insights and developments.
+*   **Sentiment Analyst:** Analyzes public sentiment using news, social media, and forums to gauge market mood.
+*   **Fundamental Analyst:** Assesses financial health, valuation metrics, and competitive positioning.
+*   **Technical Analyst:** Analyzes historical price movements, trading volume, and chart patterns.
+*   **Risk Manager:** Identifies and assesses risks associated with stock investment.
+*   **Recommendation Engine:** Consolidates insights from all analyses to generate a final buy, hold, or sell recommendation.
 
-For support, questions, or feedback regarding the AgenticStock Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+**Tasks:**
 
-Let's create wonders together with the power and simplicity of crewAI.
+*   **Research Task:** Conducts a thorough stock research.
+*   **Sentiment Analysis Task:** Analyzes the sentiment surrounding the stock.
+*   **Fundamental Analysis Task:** Evaluates the stock's financial health.
+*   **Technical Analysis Task:** Analyzes the stock's historical price movements.
+*   **Risk Assessment Task:** Identifies the key risks associated with investing in the stock.
+*   **Final Recommendation Task:** Consolidates insights to generate a final buy, hold, or sell recommendation.
