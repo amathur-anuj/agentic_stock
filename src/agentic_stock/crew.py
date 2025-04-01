@@ -5,6 +5,14 @@ from crewai.project import CrewBase, agent, crew, task, before_kickoff, after_ki
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
+import panel as pn 
+from crewai.tasks.task_output import TaskOutput
+
+chat_interface = pn.chat.ChatInterface()
+
+def print_output(output: TaskOutput):
+    message = output.raw
+    chat_interface.send(message, user=output.agent, respond=False)
 
 load_dotenv()
 
@@ -52,7 +60,8 @@ class AgenticStock():
         return Agent(
             config=self.agents_config['researcher'],
             tools=[SerperDevTool(), ScrapeWebsiteTool()],
-            verbose=True
+            verbose=True,
+            callback=print_output
         )
 
     #@agent
@@ -66,35 +75,40 @@ class AgenticStock():
     def Sentiment_Analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['Sentiment_Analyst'],
-            verbose=True
+            verbose=True,
+            callback=print_output
         )
     
     @agent
     def Fundamental_Analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['Fundamental_Analyst'],
-            verbose=True
+            verbose=True,
+            callback=print_output
         )
     
     @agent
     def Technical_Analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['Technical_Analyst'],
-            verbose=True
+            verbose=True,
+            callback=print_output
         )
     
     @agent
     def Risk_Manager(self) -> Agent:
         return Agent(
             config=self.agents_config['Risk_Manager'],
-            verbose=True
+            verbose=True,
+            callback=print_output
         )
     
     @agent
     def Recommendation_Engine(self) -> Agent:
         return Agent(
             config=self.agents_config['Recommendation_Engine'],
-            verbose=True
+            verbose=True,
+            callback=print_output
         )
 
     # To learn more about structured task outputs,
@@ -104,6 +118,7 @@ class AgenticStock():
     def research_task(self) -> Task:
         return Task(
             config=self.tasks_config['research_task'],
+            callback=print_output,
         )
 
     # @task
@@ -117,45 +132,72 @@ class AgenticStock():
     def sentiment_task(self) -> Task:
         return Task(
             config=self.tasks_config['sentiment_analysis_task'],
+            callback=print_output,
         )
     
     @task
     def fundamental_task(self) -> Task:
         return Task(
             config=self.tasks_config['fundamental_analysis_task'],
+            callback=print_output,
         )
     
     @task
     def technical_task(self) -> Task:
         return Task(
             config=self.tasks_config['technical_analysis_task'],
+            callback=print_output,
         )
     
     @task
     def risk_task(self) -> Task:
         return Task(
             config=self.tasks_config['risk_assessment_task'],
+            callback=print_output,
         )
     
     @task
     def final_recommendation_task(self) -> Task:
         return Task(
             config=self.tasks_config['final_recommendation_task'],
-            output_file='final_recommendation.md'
+            callback=print_output,
+            human_input=True,
         )
 
 
     @crew
     def crew(self) -> Crew:
         """Creates the AgenticStock crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
+        
+        # Create tasks
+        research_task = self.research_task()
+        sentiment_task = self.sentiment_task()
+        fundamental_task = self.fundamental_task()
+        technical_task = self.technical_task()
+        risk_task = self.risk_task()
+        final_recommendation_task = self.final_recommendation_task()
+
+        # Create a flat task list in the order they should execute
+        tasks = [
+            research_task,
+            sentiment_task,
+            fundamental_task, 
+            technical_task,
+            risk_task,
+            final_recommendation_task
+        ]
 
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
+            agents=self.agents,
+            tasks=tasks,
             process=Process.sequential,
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
-            llm=llm # Set the default Groq LLM for the crew
+            llm=llm
         )
+
+# Send restart message
+chat_interface.send(
+    "Type '/restart' to analyze another stock or continue with follow-up questions.",
+    user="System",
+    respond=False
+)

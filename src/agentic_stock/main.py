@@ -1,67 +1,94 @@
-#!/usr/bin/env python
-import sys
-import warnings
+import os
+from dotenv import load_dotenv
+import panel as pn
 
-from agentic_stock.crew import AgenticStock
+load_dotenv()
 
-warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+pn.extension(design="material")
 
-# This main file is intended to be a way for you to run your
-# crew locally, so refrain from adding unnecessary logic into this file.
-# Replace with inputs you want to test with, it will automatically
-# interpolate any tasks and agents information
+from crew import AgenticStock
+from crew import chat_interface
+import threading
 
-def run():
-    """
-    Run the crew.
-    """
-    inputs = {
-        "Stock": input("Enter the Stock: ")
-    }
+from crewai.agents.agent_builder.base_agent_executor_mixin import CrewAgentExecutorMixin
+import time
+
+def custom_ask_human_input(self, message: str) -> str:
+    global user_input
+    
+    # Send the agent's message to the chat interface
+    chat_interface.send(message, user="Agent", respond=False)
+    
+    prompt = "Please provide your input: "
+    chat_interface.send(prompt, user="System", respond=False)
+    
+    while user_input == None:
+        time.sleep(1)
+    
+    human_comments = user_input
+    user_input = None
+    
+    return human_comments
+
+# Override both methods to capture all agent interactions
+CrewAgentExecutorMixin._ask_human_input = custom_ask_human_input
+CrewAgentExecutorMixin.ask_human = custom_ask_human_input
+
+user_input = None
+crew_started = False
+
+def initiate_chat(message):
+    global crew_started
+    crew_started = True
     
     try:
-        AgenticStock().crew().kickoff(inputs=inputs)
+        # Initialize crew with inputs
+        inputs = {"Stock": message}
+        crew = AgenticStock().crew()
+        
+        # Run the crew
+        result = crew.kickoff(inputs=inputs)
+        
+        # Send final results back to chat
+        chat_interface.send(result, user="Assistant", respond=False)
+        
+        # Send restart message
+        chat_interface.send(
+            "Type '/restart' to analyze another stock or continue with follow-up questions.",
+            user="System",
+            respond=False
+        )
     except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
+        chat_interface.send(f"An error occurred: {e}", user="Assistant", respond=False)
+    crew_started = False
 
+def callback(contents: str, user: str, instance: pn.chat.ChatInterface):
+    global crew_started
+    global user_input
 
-def train():
-    """
-    Train the crew for a given number of iterations.
-    """
-    inputs = {
-        "topic": "AI LLMs"
-    }
-    try:
-        AgenticStock().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+    if contents.lower().strip() == "/restart":
+        crew_started = False
+        chat_interface.send(
+            "Welcome back! What Stock would you like me to research?",
+            user="Assistant",
+            respond=False
+        )
+        return
 
-    except Exception as e:
-        raise Exception(f"An error occurred while training the crew: {e}")
+    if not crew_started:
+        thread = threading.Thread(target=initiate_chat, args=(contents,))
+        thread.start()
+    else:
+        user_input = contents
 
-def replay():
-    """
-    Replay the crew execution from a specific task.
-    """
-    try:
-        AgenticStock().crew().replay(task_id=sys.argv[1])
+chat_interface.callback = callback 
 
-    except Exception as e:
-        raise Exception(f"An error occurred while replaying the crew: {e}")
+# Send welcome message
+chat_interface.send(
+    "Welcome! I'm your AI Stock Research Assistant. What Stock would you like me to research?\n\nType '/restart' at any time to start a new analysis.",
+    user="Assistant",
+    respond=False
+)
 
-def test():
-    """
-    Test the crew execution and returns the results.
-    """
-    inputs = {
-        "topic": "AI LLMs",
-    }
-    try:
-        AgenticStock().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
-
-    except Exception as e:
-        raise Exception(f"An error occurred while testing the crew: {e}")
-
-# Using the special variable 
-# __name__
-if __name__=="__main__":
-    run()
+# Make it servable
+chat_interface.servable()
