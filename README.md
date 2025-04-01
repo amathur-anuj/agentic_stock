@@ -1,6 +1,8 @@
 # AgenticStock Crew
 
-Welcome to the AgenticStock Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Welcome to the AgenticStock Crew project, powered by [crewAI](https://crewai.com). This project, named "agentic_stock" and versioned at 0.1.0, is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+
+This project requires Python >=3.10 and <3.13. It depends on the crewai[tools] package, version >=0.108.0 and <1.0.0.
 
 ## Installation
 
@@ -14,10 +16,24 @@ pip install uv
 
 Next, navigate to your project directory and install the dependencies:
 
+```bash
+pip install crewai crewai[tools]
+pip install lanchain_groq
+pip install panel
+pip install -e .
+```
+
 (Optional) Lock the dependencies and install them by using the CLI command:
 ```bash
 crewai install
 ```
+
+To start the chat application, run the following command:
+
+```bash
+panel serve src/agentic_stock/main.py
+```
+
 ### Customizing
 
 **Add your `OPENAI_API_KEY` into the `.env` file**
@@ -35,7 +51,7 @@ To kickstart your crew of AI agents and begin task execution, run this from the 
 $ crewai run
 ```
 
-This command initializes the agentic-stock Crew, assembling the agents and assigning them tasks as defined in your configuration.
+This command initializes the agentic-stock Crew, assembling the agents and assigning them tasks as defined in your configuration. The project provides a chat interface for interacting with the crew. You can start a new analysis by typing a stock ticker, and restart the analysis by typing '/restart'.
 
 ## The Crew and Their Tasks
 
