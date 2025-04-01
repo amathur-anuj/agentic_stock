@@ -27,31 +27,22 @@ pip install -e .
 ```bash
 crewai install
 ```
-
+## Running the Application
 To start the chat application, run the following command:
 
 ```bash
 panel serve src/agentic_stock/main.py
 ```
+This command initializes the agentic-stock Crew, assembling the agents and assigning them tasks as defined in your configuration. The project provides a chat interface for interacting with the crew. You can start a new analysis by typing a stock ticker, and restart the analysis by typing '/restart'.
 
 ### Customizing
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+**Add your `GROQ_API_KEY` into the `.env` file**
 
 - Modify `src/agentic_stock/config/agents.yaml` to define your agents
 - Modify `src/agentic_stock/config/tasks.yaml` to define your tasks
 - Modify `src/agentic_stock/crew.py` to add your own logic, tools and specific args
 - Modify `src/agentic_stock/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
-```bash
-$ crewai run
-```
-
-This command initializes the agentic-stock Crew, assembling the agents and assigning them tasks as defined in your configuration. The project provides a chat interface for interacting with the crew. You can start a new analysis by typing a stock ticker, and restart the analysis by typing '/restart'.
 
 ## The Crew and Their Tasks
 
